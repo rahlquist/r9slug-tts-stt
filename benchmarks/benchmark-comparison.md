@@ -75,8 +75,11 @@ included); the numbers above are in-process. Compare request latencies, not over
 - Parakeet on the dGPU is **not** faster than 6 CPU threads on either host. Both
   GPU runs are host/device-copy bound (onnxruntime reports hundreds of Memcpy
   nodes for the CUDA EP), and the model is small enough that the CPU wins.
-- r9slug CUDA and wimpy ROCm results were verified to actually execute on the
-  GPU (CUDA EP session providers; AMD `gpu_busy_percent` 27–60% during the run).
+- Both dGPU runs were verified to actually execute on the device, not fall back:
+  r9slug's CUDA session reports `CUDAExecutionProvider` and `nvidia-smi` shows
+  1.4-2.8 GB allocated with 1-16% utilization during the run; wimpy's ROCm run
+  shows `gpu_busy_percent` 27-60% on the Radeon. Low utilization is the point --
+  the model is too small to keep the device busy.
 - hermesvm01 is a VM on wimpy and has no dGPU, so it is CPU-only by design.
 - WER differences of ±0.3 pp between hosts are run-to-run noise on a 73-clip
   corpus; the model and corpus are identical everywhere.

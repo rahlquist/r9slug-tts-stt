@@ -111,11 +111,12 @@ Resident, pre-warmed service; model load and warm-up are excluded from the timed
 
 **Parakeet on the dGPU is not faster than 6 CPU threads on either host.** r9slug's CUDA
 path is 20.23 RTFx against 29.91 on CPU; wimpy's ROCm path (43.58) is within noise of its
-CPU path (42.98). Both GPU runs were verified to actually execute on the GPU — the CUDA
-session reports `CUDAExecutionProvider`, and `gpu_busy_percent` on wimpy's Radeon reads
-27–60 % during the run — so this is not a silent fallback. The cause is the model: at
-0.6 B int8 the encoder is small enough that onnxruntime's host↔device transfers
-(the CUDA EP alone inserts 742 Memcpy nodes) cost more than the CPU inference they save.
+CPU path (42.98). Both GPU runs were verified to actually execute on the device, not fall back:
+`nvidia-smi` on r9slug shows 1.4–2.8 GB allocated with 1–16 % utilization during the CUDA
+run, and wimpy's Radeon reads 27–60 % `gpu_busy_percent` during the ROCm run. The low
+utilization is itself the finding — the model is too small to keep the device busy, so
+onnxruntime's host↔device transfers (the CUDA EP alone inserts 742 Memcpy nodes) cost more
+than the CPU inference they save.
 
 The dGPU is not wasted, though: it is the only path that serves **TTS** at 60–93× realtime
 with 47 ms latency, and it leaves the CPU free for the STT workloads above.
