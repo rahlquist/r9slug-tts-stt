@@ -75,9 +75,10 @@ All STT figures are the same kit on all three hosts: 73 labelled LibriSpeech cli
 | *slug / iGPU (whisper large-v3-turbo)* | *—* | *—* | *1.74 s* | *—* |
 | *slug / NPU (whisper large-v3-turbo)* | *—* | *—* | *2.70 s* | *—* |
 
-Parakeet is **10–26× faster than slug's whisper large-v3-turbo** on the identical 11 s
-probe. Slug's figures are end-to-end HTTP requests (~2.1 s fixed server overhead
-included); these are in-process. Compare request latencies, not overheads.
+Parakeet is **5–15× faster than slug's whisper large-v3-turbo** on the identical 11 s
+probe (0.177–0.351 s here against 1.74 s on slug's iGPU and 2.70 s on its NPU). Slug's
+figures are end-to-end HTTP requests (~2.1 s fixed server overhead included); these are
+in-process. Compare request latencies, not overheads.
 
 ### STT — Moonshine (CPU only)
 
