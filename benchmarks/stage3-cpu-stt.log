@@ -1,0 +1,12 @@
+2026-11-13 00:06:39  STT_URL=http://127.0.0.1:8094/v1/audio/transcriptions AUDIO=data/clips/000_1272-128104-0000.wav
+2026-11-13 00:06:40  STT idle                       n=5  mean=0.212s  min=0.201s  max=0.231s
+2026-11-13 00:06:40  TTS idle total (stream)        n=5  mean=0.054s  min=0.049s  max=0.073s
+2026-11-13 00:06:40  TTS idle TTFA                  n=5  mean=0.054s  min=0.049s  max=0.073s
+2026-11-13 00:06:40  STT concurrent                 mean=0.201s (idle 0.212s, -5.2%)
+2026-11-13 00:06:40  TTS concurrent total           mean=0.073s (idle 0.054s, +35.1%)
+2026-11-13 00:06:40  TTS concurrent TTFA            mean=0.073s (idle 0.054s, +35.1%)
+2026-11-13 00:06:41  STT during TTS flood x5        mean=0.245s (idle 0.212s, +15.5%)
+2026-11-13 00:06:41  TTS flood wall (per req)       mean=0.258s
+2026-11-13 00:06:42  TTS during STT flood x5 total  mean=0.075s (idle 0.054s, +37.5%)
+2026-11-13 00:06:42  TTS during STT flood x5 TTFA   mean=0.075s (idle 0.054s, +37.5%)
+2026-11-13 00:06:42  STT flood wall (per req)       mean=0.640s

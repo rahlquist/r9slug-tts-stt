@@ -122,6 +122,39 @@ than the CPU inference they save.
 The dGPU is not wasted, though: it is the only path that serves **TTS** at 60–93× realtime
 with 47 ms latency, and it leaves the CPU free for the STT workloads above.
 
+### Simultaneous TTS + STT (Stage-3 concurrency)
+
+Both services resident and pre-warmed, TTS on the dGPU. Same method as slug's Stage 3:
+idle baselines, one strictly-simultaneous pair, then 5-way floods in each direction.
+The STT clip is 5.855 s of LibriSpeech speech; TTS text is a fixed 6-word sentence.
+
+| Scenario | STT idle | STT with TTS | TTS idle | TTS with STT |
+|---|---:|---:|---:|---:|
+| Parakeet STT on **CPU** | 0.212 s | 0.201 s (**−5.2 %**) | 0.054 s | 0.073 s (+35.1 %) |
+| Parakeet STT on **dGPU** (CUDA) | 0.221 s | 0.218 s (**−1.3 %**) | 0.054 s | 0.071 s (+30.6 %) |
+
+Under a 5-way flood:
+
+| Load | STT on CPU | STT on dGPU |
+|---|---:|---:|
+| STT during a TTS flood ×5 | 0.245 s (+15.5 %) | 0.257 s (+16.3 %) |
+| TTS during an STT flood ×5 | 0.075 s (+37.5 %) | 0.061 s (+13.1 %) |
+
+**STT barely notices TTS; TTS pays a small tax for STT.** Kokoro is so fast (54 ms idle)
+and Parakeet is the heavier job, so contention is asymmetric. Even the worst case measured
+— TTS under a 5-way STT flood with Parakeet on CPU — is 75 ms, still ~118× realtime. Both
+devices keep headroom: 3.3 GB of 16 GB VRAM with both loaded.
+
+The TTS flood row is throughput, not latency: the service is single-worker with a
+generation lock, so five concurrent TTS requests serialise (0.235 s each) instead of
+running in parallel. Raising `--workers` will not add TTS throughput — the GPU is the
+binding constraint.
+
+**Recommendation:** run Parakeet on the **CPU** and leave the GPU to Kokoro. The dGPU path
+is not faster for this model (20.23 vs 29.91 RTFx in the batch bench) and it adds GPU
+memory pressure. CPU Parakeet costs the TTS +37 % in the worst flood case; dGPU Parakeet
+costs +13 % but is slower per request. Both are fine — CPU is the simpler choice.
+
 ---
 
 ## Install
@@ -186,8 +219,10 @@ curl -X POST http://r9slug.home.lan:8093/v1/audio/speech \
 systemd/     kokoro-tts.service (resident CUDA TTS unit)
 benchmarks/  asr-bench/            the bench kit (images, scripts, corpus, raw results)
              benchmark-comparison.md   cross-host chart in slug's comparison format
+             stage3-cpu-stt.log / stage3-cuda-stt.log   concurrency runs
 docs/        architecture.html    interactive topology diagram
-scripts/     helper entry points
+scripts/     run_matrix.sh         cross-machine orchestration
+             run_device.sh is in benchmarks/asr-bench/
 ```
 
 ## Security
