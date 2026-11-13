@@ -1,0 +1,22 @@
+[Unit]
+Description=Parakeet STT service (CPU, OpenAI-compatible)
+After=network.target
+
+[Service]
+Type=simple
+User=rahlquist
+Group=rahlquist
+WorkingDirectory=/home/rahlquist/parakeet-stt
+Environment=OMP_NUM_THREADS=6
+Environment=ASR_MODEL=nemo-parakeet-tdt-0.6b-v3
+Environment=ASR_MODEL_PATH=/home/rahlquist/parakeet-stt/models/parakeet
+Environment=ASR_PROVIDERS=CPUExecutionProvider
+Environment=HF_HOME=/home/rahlquist/parakeet-stt/models/hf
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/rahlquist/parakeet-stt/venv/bin/uvicorn serve:app --host 0.0.0.0 --port 8094 --workers 1
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -24,19 +24,20 @@ LAN clients (192.168.8.0/24)
         ├── POST :8093/v1/audio/speech ─────────► kokoro-tts ──────────────► dGPU (RTX 5060 Ti, CUDA)
         │                                          (LAN face, resident)
         │
-        └── POST /v1/audio/transcriptions ─────► parakeet-stt (container) ► dGPU / CPU
-                                                   (benchmarked, not yet a service)
+        └── POST :8094/v1/audio/transcriptions ─► parakeet-stt ───────────► CPU (6 threads)
+                                                   (LAN face, resident)
 ```
 
 | Port | Bind | Service | Device | Purpose |
 |---|---|---|---|---|
 | 8093 | `0.0.0.0` | `kokoro-tts` | **dGPU (CUDA)** | LAN-facing TTS, OpenAI shape |
-| — | container | `parakeet-stt` | dGPU / CPU | Local STT, benchmarked |
+| 8094 | `0.0.0.0` | `parakeet-stt` | **CPU** | LAN-facing STT, OpenAI shape |
 | 8081 | slug | `whisper-proxy` | NPU / iGPU | STT that Hermes currently uses (remote) |
 
-Hermes on r9slug currently consumes **slug** for both STT (`:8081`) and TTS (`:8092`);
-r9slug's own Kokoro endpoint on `:8093` is available to LAN clients and is what the TTS
-numbers below describe.
+Both r9slug services are resident systemd units that restart on boot and pre-warm before
+reporting ready. Hermes on r9slug currently consumes **slug** for both STT (`:8081`) and
+TTS (`:8092`); r9slug's own endpoints on `:8093` / `:8094` are available to LAN clients
+and are what the numbers below describe.
 
 ## Models
 
@@ -163,10 +164,16 @@ Requires: Docker with the NVIDIA Container Toolkit (r9slug) or a ROCm userspace 
 and `uv` for the TTS service.
 
 ```bash
-# 1. TTS service (r9slug) — already installed as a systemd user unit
-systemctl --user enable --now kokoro-tts.service     # unit in systemd/
+# 1. TTS service — already installed as a systemd unit
+systemctl is-enabled kokoro-cuda.service     # unit in systemd/
 
-# 2. ASR bench kit — build the images and run the matrix
+# 2. STT service (permanent, CPU) — unit in systemd/
+sudo install -m 644 systemd/parakeet-stt.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now parakeet-stt
+sudo ufw allow from 192.168.8.0/24 to any port 8094 proto tcp
+
+# 3. ASR bench kit — build the images and run the matrix
 cd benchmarks/asr-bench
 bash run_device.sh cpu        # all six models, CPU
 bash run_device.sh cuda       # parakeet on the dGPU (r9slug)
@@ -188,6 +195,10 @@ curl -X POST http://r9slug.home.lan:8093/v1/audio/speech \
      -o out.wav
 
 # TTS → streaming PCM (omit response_format)
+
+# STT → text
+curl -X POST http://r9slug.home.lan:8094/v1/audio/transcriptions \
+     -F file=@clip.wav -F model=whisper-1
 ```
 
 ## Gotchas worth knowing
