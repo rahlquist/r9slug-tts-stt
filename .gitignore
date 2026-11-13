@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.gguf
+*.bin
+.env
+benchmarks/asr-bench/models/
+benchmarks/asr-bench/.venv/

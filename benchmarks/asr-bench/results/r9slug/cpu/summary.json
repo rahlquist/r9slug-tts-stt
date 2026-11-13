@@ -1,0 +1,104 @@
+[
+ {
+  "system": "moonshine-voice BASE offline",
+  "mode": "offline",
+  "wer_pct": 31.74,
+  "cer_pct": 16.52,
+  "empty_clips": 0,
+  "rtfx": 22.45,
+  "wall_total_s": 21.4,
+  "median_clip_s": 0.2371,
+  "p95_clip_s": 0.6482,
+  "load_s": 0.349,
+  "peak_rss_mb": 455.9,
+  "cpu_s": 265.6,
+  "first_token_latency_s": null
+ },
+ {
+  "system": "moonshine-voice MEDIUM_STREAMING stream",
+  "mode": "stream",
+  "wer_pct": 5.48,
+  "cer_pct": 2.4,
+  "empty_clips": 0,
+  "rtfx": 3.05,
+  "wall_total_s": 157.5,
+  "median_clip_s": 1.5862,
+  "p95_clip_s": 5.2072,
+  "load_s": 0.197,
+  "peak_rss_mb": 809.9,
+  "cpu_s": 2571.8,
+  "first_token_latency_s": {
+   "n": 73,
+   "median": 0.1149,
+   "p95": 0.1131
+  }
+ },
+ {
+  "system": "moonshine-voice SMALL_STREAMING stream",
+  "mode": "stream",
+  "wer_pct": 7.3,
+  "cer_pct": 3.45,
+  "empty_clips": 0,
+  "rtfx": 4.42,
+  "wall_total_s": 108.9,
+  "median_clip_s": 1.1234,
+  "p95_clip_s": 3.6482,
+  "load_s": 0.131,
+  "peak_rss_mb": 484.3,
+  "cpu_s": 1963.3,
+  "first_token_latency_s": {
+   "n": 73,
+   "median": 0.0861,
+   "p95": 0.0961
+  }
+ },
+ {
+  "system": "moonshine-voice TINY_STREAMING stream",
+  "mode": "stream",
+  "wer_pct": 11.83,
+  "cer_pct": 5.69,
+  "empty_clips": 0,
+  "rtfx": 8.12,
+  "wall_total_s": 59.2,
+  "median_clip_s": 0.6152,
+  "p95_clip_s": 1.853,
+  "load_s": 0.093,
+  "peak_rss_mb": 240.0,
+  "cpu_s": 1179.5,
+  "first_token_latency_s": {
+   "n": 73,
+   "median": 0.0406,
+   "p95": 0.0298
+  }
+ },
+ {
+  "system": "moonshine-voice TINY offline",
+  "mode": "offline",
+  "wer_pct": 36.26,
+  "cer_pct": 18.51,
+  "empty_clips": 0,
+  "rtfx": 30.34,
+  "wall_total_s": 15.9,
+  "median_clip_s": 0.1693,
+  "p95_clip_s": 0.4734,
+  "load_s": 0.223,
+  "peak_rss_mb": 224.5,
+  "cpu_s": 197.4,
+  "first_token_latency_s": null
+ },
+ {
+  "system": "onnx-asr parakeet-tdt-0.6b-v3 int8 offline",
+  "mode": "offline",
+  "wer_pct": 4.7,
+  "cer_pct": 1.95,
+  "empty_clips": 2,
+  "rtfx": 29.91,
+  "wall_total_s": 16.1,
+  "median_clip_s": 0.1888,
+  "p95_clip_s": 0.4213,
+  "load_s": 2.351,
+  "peak_rss_mb": 1473.4,
+  "cpu_s": 249.1,
+  "first_token_latency_s": null
+ }
+]

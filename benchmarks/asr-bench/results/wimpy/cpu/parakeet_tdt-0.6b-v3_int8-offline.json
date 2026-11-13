@@ -1,0 +1,449 @@
+{
+ "system": "onnx-asr parakeet-tdt-0.6b-v3 int8 offline",
+ "model": "NVIDIA Parakeet TDT 0.6B v3 (int8 ONNX)",
+ "arch": "tdt-0.6b-v3-int8",
+ "mode": "offline",
+ "load_s": 1.022,
+ "peak_rss_mb": 1494.2,
+ "cpu_s": 263.7,
+ "clips": [
+  {
+   "id": "000_1272-128104-0000",
+   "audio_s": 5.855,
+   "wall_s": 0.168,
+   "text": "mister Quilter is the apostle of the middle classes, and we are glad to welcome his gospel."
+  },
+  {
+   "id": "001_1272-128104-0001",
+   "audio_s": 4.815,
+   "wall_s": 0.1341,
+   "text": "Nor is mister Quilter's manner less interesting than his matter."
+  },
+  {
+   "id": "002_1272-128104-0002",
+   "audio_s": 12.485,
+   "wall_s": 0.2253,
+   "text": "He tells us that at this festive season of the year, with Christmas and roast beef looming before us, similes drawn from eating and its results occur most readily to the mind."
+  },
+  {
+   "id": "003_1272-128104-0003",
+   "audio_s": 9.9,
+   "wall_s": 0.1935,
+   "text": "He has grave doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca."
+  },
+  {
+   "id": "004_1272-128104-0004",
+   "audio_s": 29.4,
+   "wall_s": 0.4283,
+   "text": "Linnell's pictures are a sort of Up Guards and Adam paintings, and Mason's exquisite idols are as national as a jingo poem. mister Burkett Foster's landscapes smile at one much in the same way that mister Carker used to flash his teeth. And mister John Collier gives his sitter a cheerful slap on the back, before he says, like a shampooer in a Turkish bath Next, man."
+  },
+  {
+   "id": "005_1272-128104-0005",
+   "audio_s": 9.01,
+   "wall_s": 0.1632,
+   "text": "It is obviously unnecessary for us to point out how luminous these criticisms are, how delicate in expression."
+  },
+  {
+   "id": "006_1272-128104-0006",
+   "audio_s": 5.64,
+   "wall_s": 0.1522,
+   "text": "On the general principles of art, mister Quilter writes with equal lucidity."
+  },
+  {
+   "id": "007_1272-128104-0007",
+   "audio_s": 9.24,
+   "wall_s": 0.1921,
+   "text": "Painting, he tells us, is of a different quality to mathematics, and finish in art is adding more fact."
+  },
+  {
+   "id": "008_1272-128104-0008",
+   "audio_s": 5.12,
+   "wall_s": 0.1334,
+   "text": "As for etchings, they are of two kinds, British and foreign."
+  },
+  {
+   "id": "009_1272-128104-0009",
+   "audio_s": 18.29,
+   "wall_s": 0.3443,
+   "text": "He laments most bitterly the divorce that has been made between decorative art and what we usually call pictures, makes a customary appeal to the last judgment and reminds us that in the great days of art Michelangelo was the furnishing upholsterer."
+  },
+  {
+   "id": "010_1272-128104-0010",
+   "audio_s": 5.6,
+   "wall_s": 0.1367,
+   "text": "near the fire, and the ornaments Fred brought home from India on the mantle board."
+  },
+  {
+   "id": "011_1272-128104-0011",
+   "audio_s": 15.115,
+   "wall_s": 0.2373,
+   "text": "In fact, he is quite severe on mister Ruskin for not recognising that a picture should denote the frailty of man, and remarks with pleasing courtesy and felicitous grace that many phases of feeling"
+  },
+  {
+   "id": "012_1272-128104-0012",
+   "audio_s": 5.38,
+   "wall_s": 0.1378,
+   "text": "Only, unfortunately, his own work never does get good."
+  },
+  {
+   "id": "013_1272-128104-0013",
+   "audio_s": 7.1,
+   "wall_s": 0.1419,
+   "text": "mister Quilter has missed his chance, for he has failed even to make himself the Tupper of Painting."
+  },
+  {
+   "id": "014_1272-128104-0014",
+   "audio_s": 2.245,
+   "wall_s": 0.1148,
+   "text": "by Harry Quilter, M. A."
+  },
+  {
+   "id": "015_1272-135031-0000",
+   "audio_s": 10.885,
+   "wall_s": 0.1977,
+   "text": "Because you were sleeping instead of conquering, the lovely rose princess has become a fiddle without a bow, while poor Shaggy sits there a cooing dove."
+  },
+  {
+   "id": "016_1272-135031-0001",
+   "audio_s": 11.13,
+   "wall_s": 0.1848,
+   "text": "He has gone, and gone for good, answered Polychrome, who had managed to squeeze into the room beside the dragon, and had witnessed the occurrences with much interest."
+  },
+  {
+   "id": "017_1272-135031-0002",
+   "audio_s": 11.475,
+   "wall_s": 0.1805,
+   "text": "I have remained a prisoner only because I wished to be one. And with this he stepped forward and burst the stout chains as easily as if they had been threads."
+  },
+  {
+   "id": "018_1272-135031-0003",
+   "audio_s": 4.755,
+   "wall_s": 0.125,
+   "text": "The little girl had been asleep, but she heard the raps and opened the door."
+  },
+  {
+   "id": "019_1272-135031-0004",
+   "audio_s": 4.225,
+   "wall_s": 0.1187,
+   "text": "The king has flooded a disgrace and your friends are asking for you."
+  },
+  {
+   "id": "020_1272-135031-0005",
+   "audio_s": 4.625,
+   "wall_s": 0.1245,
+   "text": "I beggedow long ago to send him away, but he would not do so."
+  },
+  {
+   "id": "021_1272-135031-0006",
+   "audio_s": 4.09,
+   "wall_s": 0.1159,
+   "text": "I also offered to help your brother to escape, but he would not go."
+  },
+  {
+   "id": "022_1272-135031-0007",
+   "audio_s": 4.055,
+   "wall_s": 0.1247,
+   "text": "He eats and sleeps very steadily, replied the new king."
+  },
+  {
+   "id": "023_1272-135031-0008",
+   "audio_s": 3.67,
+   "wall_s": 0.1241,
+   "text": "I hope he doesn't work too hard, said Shaggy."
+  },
+  {
+   "id": "024_1272-135031-0009",
+   "audio_s": 1.91,
+   "wall_s": 0.1046,
+   "text": ""
+  },
+  {
+   "id": "025_1272-135031-0010",
+   "audio_s": 8.995,
+   "wall_s": 0.1738,
+   "text": "In fact, there's nothing he can do in these dominions, as well as our gnomes, whose numbers are so great that it worries us to keep them all busy."
+  },
+  {
+   "id": "026_1272-135031-0011",
+   "audio_s": 3.18,
+   "wall_s": 0.1204,
+   "text": "Not exactly, returned Calico."
+  },
+  {
+   "id": "027_1272-135031-0012",
+   "audio_s": 2.04,
+   "wall_s": 0.1033,
+   "text": "Where is my brother now?"
+  },
+  {
+   "id": "028_1272-135031-0013",
+   "audio_s": 3.7,
+   "wall_s": 0.1283,
+   "text": "inquired Shaggy. In the metal forest."
+  },
+  {
+   "id": "029_1272-135031-0014",
+   "audio_s": 1.74,
+   "wall_s": 0.0995,
+   "text": "Where is that?"
+  },
+  {
+   "id": "030_1272-135031-0015",
+   "audio_s": 7.375,
+   "wall_s": 0.1851,
+   "text": "The middle forest is in the great domed cavern, the largest in all our dominions, replied Calico."
+  },
+  {
+   "id": "031_1272-135031-0016",
+   "audio_s": 2.28,
+   "wall_s": 0.1189,
+   "text": "Calico hesitated."
+  },
+  {
+   "id": "032_1272-135031-0017",
+   "audio_s": 6.86,
+   "wall_s": 0.1495,
+   "text": "However, if we look sharp, we may be able to discover one of these secret ways."
+  },
+  {
+   "id": "033_1272-135031-0018",
+   "audio_s": 2.445,
+   "wall_s": 0.1074,
+   "text": "Oh no, I'm quite sure he didn't."
+  },
+  {
+   "id": "034_1272-135031-0019",
+   "audio_s": 3.525,
+   "wall_s": 0.1224,
+   "text": "That's funny, remarked Betsy thoughtful."
+  },
+  {
+   "id": "035_1272-135031-0020",
+   "audio_s": 4.65,
+   "wall_s": 0.1393,
+   "text": "I don't believe Anne knew any magic, or she'd have worked it before."
+  },
+  {
+   "id": "036_1272-135031-0021",
+   "audio_s": 2.595,
+   "wall_s": 0.1085,
+   "text": "I do not know, confessed Shaggy."
+  },
+  {
+   "id": "037_1272-135031-0022",
+   "audio_s": 2.695,
+   "wall_s": 0.1111,
+   "text": "True, agreed Calico."
+  },
+  {
+   "id": "038_1272-135031-0023",
+   "audio_s": 7.52,
+   "wall_s": 0.1651,
+   "text": "Calico went to the big gong and pounded on it just as Vrigado used to do, but no one answered the summons."
+  },
+  {
+   "id": "039_1272-135031-0024",
+   "audio_s": 14.47,
+   "wall_s": 0.2673,
+   "text": "Having returned to the royal cavern, Calico first pounded the gong, and then sat in the throne, wearing Reggedaud's discarded ruby crown, and holding in his hand the scepter which Ruggeda had so often thrown at his head."
+  },
+  {
+   "id": "040_1272-141231-0000",
+   "audio_s": 4.65,
+   "wall_s": 0.14,
+   "text": "A man said to the universe, Sir, I exist."
+  },
+  {
+   "id": "041_1272-141231-0001",
+   "audio_s": 6.535,
+   "wall_s": 0.18,
+   "text": "Sweat covered Brion's body, trickling into the tight loin cloth that was the only garment he wore."
+  },
+  {
+   "id": "042_1272-141231-0002",
+   "audio_s": 13.335,
+   "wall_s": 0.2,
+   "text": "the cut on his chest, still dripping blood, the ache of his overstrained eyes, even the soaring arena around him with the thousands of spectators, were trivialities not worth thinking about."
+  },
+  {
+   "id": "043_1272-141231-0003",
+   "audio_s": 5.42,
+   "wall_s": 0.1264,
+   "text": "His instant panic was followed by a small sharp blow high on his chest."
+  },
+  {
+   "id": "044_1272-141231-0004",
+   "audio_s": 5.09,
+   "wall_s": 0.1492,
+   "text": "One minute, a voice said, and a time buzzer sounded."
+  },
+  {
+   "id": "045_1272-141231-0005",
+   "audio_s": 5.81,
+   "wall_s": 0.1264,
+   "text": "A minute is not a very large measure of time, and his body needed every fraction of it."
+  },
+  {
+   "id": "046_1272-141231-0006",
+   "audio_s": 4.93,
+   "wall_s": 0.1268,
+   "text": "The buzzer of swer triggered his muscles into complete relaxation."
+  },
+  {
+   "id": "047_1272-141231-0007",
+   "audio_s": 4.735,
+   "wall_s": 0.124,
+   "text": "Only his heart and lungs worked on at a strong measured rate."
+  },
+  {
+   "id": "048_1272-141231-0008",
+   "audio_s": 4.595,
+   "wall_s": 0.128,
+   "text": "He was in reverie, sliding along the borders of consciousness."
+  },
+  {
+   "id": "049_1272-141231-0009",
+   "audio_s": 8.62,
+   "wall_s": 0.1757,
+   "text": "The contestants in the twenties needed undisturbed rest. Therefore nights in the dormitories were as quiet as death."
+  },
+  {
+   "id": "050_1272-141231-0010",
+   "audio_s": 10.76,
+   "wall_s": 0.1906,
+   "text": "particularly so on this last night, when only two of the little cubicles were occupied, the thousands of others standing with dark empty doors."
+  },
+  {
+   "id": "051_1272-141231-0011",
+   "audio_s": 5.015,
+   "wall_s": 0.1365,
+   "text": "the other voice snapped with a harsh urgency clearly used to command."
+  },
+  {
+   "id": "052_1272-141231-0012",
+   "audio_s": 7.74,
+   "wall_s": 0.1571,
+   "text": "I'm here because the matter is of utmost importance, and Brand is the one I must see. Now stand aside."
+  },
+  {
+   "id": "053_1272-141231-0013",
+   "audio_s": 1.64,
+   "wall_s": 0.0987,
+   "text": "The twenties"
+  },
+  {
+   "id": "054_1272-141231-0014",
+   "audio_s": 7.305,
+   "wall_s": 0.1574,
+   "text": "He must have drawn his gun, because the intruder said quickly, Put that away. You're being a fool. Out"
+  },
+  {
+   "id": "055_1272-141231-0015",
+   "audio_s": 5.68,
+   "wall_s": 0.141,
+   "text": "There was silence then, and, still wondering, Brian was once more asleep."
+  },
+  {
+   "id": "056_1272-141231-0016",
+   "audio_s": 1.85,
+   "wall_s": 0.1019,
+   "text": ""
+  },
+  {
+   "id": "057_1272-141231-0017",
+   "audio_s": 3.735,
+   "wall_s": 0.1234,
+   "text": "he asked the handler, who was kneading his aching muscles."
+  },
+  {
+   "id": "058_1272-141231-0018",
+   "audio_s": 6.0,
+   "wall_s": 0.15,
+   "text": "a red haired mountain of a man with an apparently inexhaustible store of energy."
+  },
+  {
+   "id": "059_1272-141231-0019",
+   "audio_s": 4.7,
+   "wall_s": 0.157,
+   "text": "There could be little art in this last and final round of fencing."
+  },
+  {
+   "id": "060_1272-141231-0020",
+   "audio_s": 4.32,
+   "wall_s": 0.1334,
+   "text": "Just thrust and parry and victory to the stronger."
+  },
+  {
+   "id": "061_1272-141231-0021",
+   "audio_s": 4.65,
+   "wall_s": 0.1295,
+   "text": "Every man who entered the twenties had his own training tricks."
+  },
+  {
+   "id": "062_1272-141231-0022",
+   "audio_s": 8.35,
+   "wall_s": 0.1679,
+   "text": "There appeared to be an immediate association with the death trauma, as if the two were inextricably linked into one."
+  },
+  {
+   "id": "063_1272-141231-0023",
+   "audio_s": 8.66,
+   "wall_s": 0.1742,
+   "text": "The strength that enables someone in a trance to hold his body stiff and unsupported except at two points, the head and heels."
+  },
+  {
+   "id": "064_1272-141231-0024",
+   "audio_s": 3.64,
+   "wall_s": 0.1284,
+   "text": "This is physically impossible when conscious."
+  },
+  {
+   "id": "065_1272-141231-0025",
+   "audio_s": 8.725,
+   "wall_s": 0.1741,
+   "text": "Others had died before during the twenties, and death during the last round was, in some ways, easier than defeat."
+  },
+  {
+   "id": "066_1272-141231-0026",
+   "audio_s": 6.635,
+   "wall_s": 0.1494,
+   "text": "Breathing deeply, Brian softly spoke the auto hypnotic phrases that triggered the process."
+  },
+  {
+   "id": "067_1272-141231-0027",
+   "audio_s": 6.57,
+   "wall_s": 0.1363,
+   "text": "When the buzzer sounded, he pulled his foil from his second startled grasp and ran forward."
+  },
+  {
+   "id": "068_1272-141231-0028",
+   "audio_s": 5.65,
+   "wall_s": 0.1339,
+   "text": "Irold looked amazed at the sudden fury of the attack, then smiled."
+  },
+  {
+   "id": "069_1272-141231-0029",
+   "audio_s": 6.88,
+   "wall_s": 0.1497,
+   "text": "He thought it was the last burst of energy. He knew how close they both were to exhaustion."
+  },
+  {
+   "id": "070_1272-141231-0030",
+   "audio_s": 7.13,
+   "wall_s": 0.1501,
+   "text": "Brian saw something close to panic on his opponent's face when the man finally recognized his error."
+  },
+  {
+   "id": "071_1272-141231-0031",
+   "audio_s": 7.115,
+   "wall_s": 0.1456,
+   "text": "A wave of despair rolled out from Irog. Brian sensed it, and knew the fifth point was his."
+  },
+  {
+   "id": "072_1272-141231-0032",
+   "audio_s": 4.48,
+   "wall_s": 0.1268,
+   "text": "Then the powerful twists that thrust to the side. In and under the guard,"
+  }
+ ]
+}

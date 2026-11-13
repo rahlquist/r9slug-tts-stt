@@ -1,0 +1,13 @@
+FROM python:3.12-slim
+ENV PIP_NO_CACHE_DIR=1 OMP_NUM_THREADS=6 HF_HOME=/models/hf
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libelf1 libnuma1 libdrm2 libdrm-common libdrm-amdgpu1 \
+    && rm -rf /var/lib/apt/lists/*
+# onnxruntime-rocm provides the `onnxruntime` module with the ROCm EP.
+RUN pip install "onnxruntime-rocm==1.22.2.post3" \
+    && pip install --no-deps "onnx-asr[hub]==0.12.0" \
+    && pip install numpy typing-extensions huggingface-hub
+COPY scripts/parakeet_prewarm.py /prewarm.py
+RUN python /prewarm.py
+COPY scripts/bench_parakeet_gpu.py /bench.py
+CMD ["python", "/bench.py"]

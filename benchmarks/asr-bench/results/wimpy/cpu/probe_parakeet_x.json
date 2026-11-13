@@ -1,0 +1,19 @@
+{
+ "engine": "parakeet tdt-0.6b-v3-int8",
+ "load_s": 1.024,
+ "peak_rss_mb": 1150.5,
+ "audio_11s": {
+  "median_s": 0.1955,
+  "min_s": 0.1736,
+  "max_s": 0.2052,
+  "cpu_s_per_req": 4.576
+ },
+ "audio_05s": {
+  "median_s": 0.0811,
+  "min_s": 0.0764,
+  "max_s": 0.0915,
+  "cpu_s_per_req": 1.95
+ },
+ "fixed_overhead_est_s": 0.0811,
+ "marginal_per_audio_s": 0.01076
+}

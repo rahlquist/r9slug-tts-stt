@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>r9slug voice stack — architecture</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f1115; color: #e6e6e6;
+         margin: 0; padding: 32px; }
+  h1 { font-size: 20px; font-weight: 600; }
+  p.lede { color: #9aa4b2; font-size: 14px; max-width: 760px; }
+  .canvas { margin-top: 24px; }
+  .node { fill: #1b2030; stroke: #3a4358; rx: 8; }
+  .node.gpu { fill: #15233a; stroke: #2f5f9e; }
+  .node.svc  { fill: #1a2a22; stroke: #2f7a52; }
+  .lbl   { fill: #e6e6e6; font-size: 13px; font-family: system-ui, sans-serif; }
+  .sub   { fill: #9aa4b2; font-size: 11px; font-family: system-ui, sans-serif; }
+  .edge  { stroke: #4a5568; stroke-width: 1.5; fill: none; marker-end: url(#arr); }
+  .port  { fill: #7aa2f7; font-size: 11px; font-family: ui-monospace, monospace; }
+  table { border-collapse: collapse; margin-top: 24px; font-size: 13px; }
+  th, td { border: 1px solid #2a3140; padding: 6px 12px; text-align: left; }
+  th { background: #1b2030; }
+</style>
+</head>
+<body>
+<h1>r9slug — voice stack</h1>
+<p class="lede">
+  r9slug is a LAN voice node on an NVIDIA RTX 5060 Ti (Blackwell, sm_120).
+  Text-to-speech is a resident, pre-warmed Kokoro-82M service on the dGPU.
+  Speech-to-text is benchmarked locally (Parakeet TDT 0.6B, Moonshine) and can be
+  served from the same box; Hermes currently consumes slug's STT endpoint.
+</p>
+
+<div class="canvas">
+<svg width="860" height="360" viewBox="0 0 860 360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#4a5568"/>
+    </marker>
+  </defs>
+
+  <!-- LAN clients -->
+  <rect class="node" x="20" y="140" width="150" height="70" rx="8"/>
+  <text class="lbl" x="40" y="170">LAN clients</text>
+  <text class="sub" x="40" y="190">192.168.8.0/24</text>
+
+  <!-- Hermes -->
+  <rect class="node" x="20" y="250" width="150" height="70" rx="8"/>
+  <text class="lbl" x="40" y="280">Hermes</text>
+  <text class="sub" x="40" y="300">agent host</text>
+
+  <!-- r9slug box -->
+  <rect class="node gpu" x="300" y="90" width="280" height="240" rx="10"/>
+  <text class="lbl" x="320" y="118">r9slug — RTX 5060 Ti (CUDA)</text>
+
+  <rect class="node svc" x="320" y="135" width="240" height="55" rx="6"/>
+  <text class="lbl" x="336" y="158">kokoro-tts</text>
+  <text class="sub" x="336" y="176">Kokoro-82M · resident · pre-warmed</text>
+  <text class="port" x="492" y="158">:8093</text>
+
+  <rect class="node svc" x="320" y="205" width="240" height="55" rx="6"/>
+  <text class="lbl" x="336" y="228">parakeet-stt</text>
+  <text class="sub" x="336" y="246">Parakeet TDT 0.6B v3 · ONNX int8</text>
+  <text class="port" x="492" y="228">container</text>
+
+  <rect class="node svc" x="320" y="275" width="240" height="40" rx="6"/>
+  <text class="lbl" x="336" y="300">moonshine</text>
+  <text class="sub" x="430" y="300">CPU only</text>
+
+  <!-- slug -->
+  <rect class="node" x="680" y="140" width="160" height="130" rx="8"/>
+  <text class="lbl" x="700" y="168">slug</text>
+  <text class="sub" x="700" y="188">STT :8081</text>
+  <text class="sub" x="700" y="206">TTS :8092</text>
+  <text class="sub" x="700" y="228">NPU + iGPU</text>
+
+  <!-- edges -->
+  <path class="edge" d="M170,175 L292,170"/>
+  <path class="edge" d="M170,285 L292,240"/>
+  <path class="edge" d="M580,232 L672,215"/>
+</svg>
+</div>
+
+<table>
+  <tr><th>Port</th><th>Bind</th><th>Service</th><th>Device</th><th>Purpose</th></tr>
+  <tr><td>8093</td><td>0.0.0.0</td><td>kokoro-tts</td><td>dGPU (CUDA)</td><td>LAN TTS, OpenAI shape</td></tr>
+  <tr><td>8081</td><td>slug</td><td>whisper-proxy</td><td>NPU / iGPU</td><td>STT (remote, slug)</td></tr>
+  <tr><td>—</td><td>container</td><td>parakeet-stt</td><td>dGPU / CPU</td><td>Local STT, benchmarked</td></tr>
+</table>
+</body>
+</html>

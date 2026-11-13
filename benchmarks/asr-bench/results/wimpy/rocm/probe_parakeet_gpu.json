@@ -1,0 +1,19 @@
+{
+ "engine": "parakeet tdt-0.6b-v3-int8 GPU (ROCMExecutionProvider,CPUExecutionProvider)",
+ "load_s": 0.979,
+ "peak_rss_mb": 2096.7,
+ "audio_11s": {
+  "median_s": 0.2824,
+  "min_s": 0.2766,
+  "max_s": 0.2917,
+  "cpu_s_per_req": 6.732
+ },
+ "audio_05s": {
+  "median_s": 0.0656,
+  "min_s": 0.0617,
+  "max_s": 0.073,
+  "cpu_s_per_req": 1.584
+ },
+ "fixed_overhead_est_s": 0.0656,
+ "marginal_per_audio_s": 0.0204
+}

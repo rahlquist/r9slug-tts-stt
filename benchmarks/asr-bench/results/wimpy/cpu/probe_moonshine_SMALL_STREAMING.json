@@ -1,0 +1,19 @@
+{
+ "engine": "moonshine SMALL_STREAMING",
+ "load_s": 0.093,
+ "peak_rss_mb": 417.3,
+ "audio_11s": {
+  "median_s": 0.5159,
+  "min_s": 0.4957,
+  "max_s": 0.6636,
+  "cpu_s_per_req": 11.562
+ },
+ "audio_05s": {
+  "median_s": 0.0032,
+  "min_s": 0.0032,
+  "max_s": 0.0033,
+  "cpu_s_per_req": 0.006
+ },
+ "fixed_overhead_est_s": 0.0032,
+ "marginal_per_audio_s": 0.04823
+}

@@ -1,0 +1,17 @@
+[
+ {
+  "system": "onnx-asr parakeet-tdt-0.6b-v3 int8 GPU (ROCMExecutionProvider,CPUExecutionProvider)",
+  "mode": "offline",
+  "wer_pct": 4.96,
+  "cer_pct": 2.05,
+  "empty_clips": 2,
+  "rtfx": 43.58,
+  "wall_total_s": 11.0,
+  "median_clip_s": 0.1405,
+  "p95_clip_s": 0.255,
+  "load_s": 0.71,
+  "peak_rss_mb": 1633.7,
+  "cpu_s": 261.5,
+  "first_token_latency_s": null
+ }
+]

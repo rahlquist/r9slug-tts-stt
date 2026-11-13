@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moonshine vs Parakeet — local STT benchmark</title>
+<style>
+  :root { font-size: 15px; }
+  * { box-sizing: border-box; }
+  body { font-family: var(--foreground, ui-sans-serif); color: var(--foreground);
+         background: transparent; margin: 0; padding: 16px; }
+  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  .sub { color: var(--muted-foreground); font-size: .85rem; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .panel { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: var(--card); }
+  .panel h2 { font-size: .95rem; margin: 0 0 2px; }
+  .panel .note { color: var(--muted-foreground); font-size: .75rem; margin: 0 0 8px; }
+  svg { width: 100%; height: auto; display: block; }
+  .barlabel { font-size: 11px; fill: var(--foreground); }
+  .catlabel { font-size: 10.5px; fill: var(--muted-foreground); }
+  .val { font-size: 10.5px; fill: var(--foreground); font-weight: 600; }
+  .refline { stroke: var(--muted-foreground); stroke-dasharray: 4 3; stroke-width: 1; }
+  .reflabel { font-size: 9.5px; fill: var(--muted-foreground); }
+  table { border-collapse: collapse; width: 100%; font-size: .8rem; }
+  th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--border); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted-foreground); font-weight: 600; }
+  .win { color: var(--accent); font-weight: 700; }
+  .tag { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+</style>
+</head>
+<body>
+  <h1>Moonshine vs NVIDIA Parakeet — CPU-only local STT</h1>
+  <div class="sub">Host: AMD Ryzen 9 9900X VM · 6 vCPU (AVX-512) · 15 GB RAM · no GPU · Docker · 73 labeled LibriSpeech clips (481 s).
+  Per-request probe follows the slug protocol: same 11 s / 0.5 s audio pair, steady-state median of 5.</div>
+  <div class="grid">
+    <div class="panel"><h2>Word error rate ↓</h2><p class="note">lower is better · corpus = 73 clips, 2,735 words</p><svg id="wer"></svg></div>
+    <div class="panel"><h2>11 s request latency ↓</h2><p class="note">slug-probe, warm steady state · dashed = slug box reference (whisper large-v3-turbo)</p><svg id="lat"></svg></div>
+    <div class="panel"><h2>Peak RAM ↓</h2><p class="note">VmHWM during full-corpus run</p><svg id="ram"></svg></div>
+    <div class="panel"><h2>Streaming first-token latency</h2><p class="note">time to first partial text while audio still arriving (batch-only = n/a)</p><svg id="tok"></svg></div>
+    <div class="panel" style="grid-column: 1/-1;"><h2>Full scorecard</h2><div id="score"></div></div>
+  </div>
+<script>
+const C = { ms_tiny:"#2e7d32", ms_small:"#66bb6a", ms_med:"#a5d6a7", pk:"#1565c0", legacy:"#9e9e9e" };
+const rows = [
+ {k:"pk",  n:"Parakeet TDT 0.6B int8", wer:4.78, lat:0.178, ram:1515, tok:null,  rtfx:45.0, load:1.0,  disk:640, mode:"offline batch"},
+ {k:"ms_med",n:"Moonshine Medium-Stream", wer:5.57, lat:0.779, ram:803,  tok:0.105, rtfx:14.3, load:0.19, disk:null, mode:"stream/offline"},
+ {k:"ms_small",n:"Moonshine Small-Stream", wer:7.22, lat:null, ram:481,  tok:0.085, rtfx:8.0,  load:0.08, disk:null, mode:"stream"},
+ {k:"ms_tiny",n:"Moonshine Tiny-Stream", wer:11.83, lat:0.271, ram:236, tok:0.033, rtfx:39.3, load:0.06, disk:null, mode:"stream/offline"},
+ {k:"legacy",n:"Moonshine Base (legacy offline)", wer:31.39, lat:null, ram:461, tok:null, rtfx:35.7, load:0.16, disk:null, mode:"offline"},
+ {k:"legacy",n:"Moonshine Tiny (legacy offline)", wer:36.35, lat:null, ram:228, tok:null, rtfx:54.0, load:0.10, disk:null, mode:"offline"}
+];
+const slugRefs = [{v:1.74,l:"slug iGPU 1.74 s"},{v:2.70,l:"slug NPU 2.70 s"}];
+function bar(id, data, opt) {
+  const W=300, rh=26, padL=opt.padL||132, padR=52, H=data.length*rh+8;
+  const svg=document.getElementById(id); svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  const max=Math.max(...data.map(d=>d.v), opt.cap||0); const s=(W-padL-padR)/max;
+  let y=8, out="";
+  if(opt.refs) for(const r of opt.refs){ if(r.v<=max){ const x=padL+r.v*s;
+    out+=`<line class="refline" x1="${x}" y1="4" x2="${x}" y2="${H-4}"/><text class="reflabel" x="${x+3}" y="${H-6}">${r.l}</text>`; } }
+  data.forEach(d=>{ out+=`<text class="catlabel" x="0" y="${y+12}" dominant-baseline="middle">${d.n}</text>`;
+    out+=`<rect x="${padL}" y="${y+4}" width="${Math.max(d.v*s,2)}" height="16" rx="3" fill="${C[d.k]}"/>`;
+    out+=`<text class="val" x="${padL+d.v*s+5}" y="${y+12}" dominant-baseline="middle">${opt.fmt(d.v)}</text>`; y+=rh; });
+  svg.innerHTML=out;
+}
+bar("wer", rows.map(r=>({n:r.n,k:r.k,v:r.wer})).sort((a,b)=>a.v-b.v), {fmt:v=>v.toFixed(2)+"%"});
+bar("lat", [{n:"Parakeet",k:"pk",v:0.178},{n:"Moonshine tiny",k:"ms_tiny",v:0.271},{n:"Moonshine medium",k:"ms_med",v:0.779}], {fmt:v=>v.toFixed(3)+" s", refs:slugRefs, cap:2.8});
+bar("ram", rows.filter(r=>r.mode!=="offline"||r.k==="pk").map(r=>({n:r.n,k:r.k,v:r.ram})).sort((a,b)=>b.v-a.v), {fmt:v=>v+" MB"});
+bar("tok", [{n:"MS Tiny",k:"ms_tiny",v:0.033},{n:"MS Small",k:"ms_small",v:0.085},{n:"MS Medium",k:"ms_med",v:0.105},{n:"Parakeet (batch)",k:"legacy",v:0.001}], {fmt:(v,i)=> v<=0.002?"n/a":(v*1000).toFixed(0)+" ms"});
+document.getElementById("score").innerHTML =
+ `<table><tr><th>System</th><th>WER ↓</th><th>CER ↓</th><th>RTFx ↑</th><th>11 s req (slug-probe)</th><th>Fixed overhead</th><th>cpu-s/req</th><th>Peak RAM</th><th>Load</th></tr>` +
+ [
+ ["Parakeet TDT 0.6B v3 int8","4.78%","1.97%","45.0","0.178 s","0.083 s","1.15","1515 MB","1.0 s"],
+ ["Moonshine Medium-Streaming","5.57%","2.40%","14.3","0.779 s","0.003 s","4.39","803 MB","0.19 s"],
+ ["Moonshine Small-Streaming","7.22%","3.40%","4.55*","—","—","—","481 MB","0.08 s"],
+ ["Moonshine Tiny-Streaming","11.83%","5.78%","39.3","0.271 s","0.003 s","1.51","236 MB","0.06 s"],
+ ["Moonshine Base (legacy)","31.39%","16.38%","35.7","—","—","—","461 MB","0.16 s"],
+ ["Moonshine Tiny (legacy)","36.35%","18.55%","54.0","—","—","—","228 MB","0.10 s"],
+ ["slug ref: whisper-l-v3-turbo iGPU","—","—","6.3","1.74 s","≈2.1 s","0.41","—","—"],
+ ["slug ref: same on NPU","—","—","4.1","2.70 s","≈2.1 s","1.03","—","—"]
+ ].map(r=>"<tr>"+r.map((c,i)=>`<td>${i<4&&c.includes&&c.match(/^(4\.78|5\.57|14\.3|45\.0|0\.178)/)?c:c}</td>`).join("")+"</tr>").join("")+"</table>"+
+ "<p class='note'>slug rows are 2026-08 measurements on the slug box (Ryzen AI 340) via HTTP server — server/audio-stack overhead included, which is why their fixed cost is ~2.1 s. This host's runs are in-process, so compare the request latencies, not the harnesses. Parakeet returned empty text on 2 clips &lt;2 s. Moonshine streaming RTFx via the 0.1 s-chunk feed harness reads low; 14.3 for Medium comes from the clean offline probe. Legacy offline Base/Tiny models are clearly superseded by the streaming builds.</p>";
+</script>
+</body>
+</html>

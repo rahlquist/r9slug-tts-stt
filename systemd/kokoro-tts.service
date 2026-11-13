@@ -1,0 +1,20 @@
+[Unit]
+Description=Kokoro CUDA speech API (RTX 5060 Ti)
+After=network.target
+
+[Service]
+Type=simple
+User=rahlquist
+Group=rahlquist
+WorkingDirectory=/home/rahlquist/tts-bench-kokoro-cuda
+Environment=CUDA_VISIBLE_DEVICES=0
+Environment=HF_HUB_OFFLINE=1
+Environment=TRANSFORMERS_OFFLINE=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/home/rahlquist/tts-bench-kokoro-cuda/.venv/bin/uvicorn service:app --host 0.0.0.0 --port 8093 --workers 1 --no-access-log
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+host: r9slug
+date: 2026-11-12T22:02:14-05:00
+kernel: 7.3.3-1-cachyos
+cpu: AMD Ryzen 9 3900X 12-Core Processor
+cores: 24
+ram_gb: 62
+docker: Docker version 29.9.3, build 5457199aa5
+nvidia_driver: 620.70.06
+nvidia_gpu: NVIDIA GeForce RTX 5060 Ti

@@ -1,0 +1,30 @@
+DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+            Install the buildx component to build images with BuildKit:
+            https://docs.docker.com/go/buildx/
+
+Sending build context to Docker daemon   38.4kB
+Step 1/7 : FROM python:3.12-slim
+ ---> 5e2bdb1b0d54
+Step 2/7 : ENV PIP_NO_CACHE_DIR=1 OMP_NUM_THREADS=6 HF_HOME=/models/hf
+ ---> Using cache
+ ---> f32854b7805f
+Step 3/7 : RUN pip install "onnx-asr[cpu,hub]==0.12.0"
+ ---> Using cache
+ ---> e540b1df8c68
+Step 4/7 : COPY scripts/parakeet_prewarm.py /prewarm.py
+ ---> ce569ea9b8c2
+Step 5/7 : RUN python /prewarm.py
+ ---> Running in c84cdbc7ea03
+[91mFetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s][0m[91mWarning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[0m[91mFetching 4 files:  25%|██▌       | 1/4 [00:00<00:00,  9.54it/s][0m[91mFetching 4 files:  50%|█████     | 2/4 [00:00<00:00,  9.59it/s][0m[91mFetching 4 files:  75%|███████▌  | 3/4 [00:01<00:00,  1.75it/s][0m[91mFetching 4 files: 100%|██████████| 4/4 [00:07<00:00,  2.73s/it][0m[91mFetching 4 files: 100%|██████████| 4/4 [00:07<00:00,  1.85s/it]
+[0mparakeet prewarm OK: onnx_asr.adapters
+ ---> Removed intermediate container c84cdbc7ea03
+ ---> 3c67286d2d61
+Step 6/7 : COPY scripts/bench_parakeet.py /bench.py
+ ---> 9dbf8b170941
+Step 7/7 : CMD ["python", "/bench.py"]
+ ---> Running in 00d0d4ea08b0
+ ---> Removed intermediate container 00d0d4ea08b0
+ ---> adebad559e4f
+Successfully built adebad559e4f
+Successfully tagged asr-parakeet:latest
