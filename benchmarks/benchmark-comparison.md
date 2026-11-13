@@ -1,4 +1,4 @@
-# ASR bench comparison — r9slug / wimpy / hermesvm01, CPU + dGPU (2026-11-12)
+# ASR bench comparison — r9slug / wimpy / hermesvm01, CPU + dGPU (2026-11-13)
 
 Same kit, same 73-clip LibriSpeech corpus (481 s), same slug-protocol probe 
 (0.5 s / 11 s audio pair, median of 5). Containers: `asr-parakeet` / `asr-moonshine`,
@@ -56,6 +56,31 @@ Median of 5 requests, warmup excluded. `fixed` is the 0.5 s request median;
 | moonshine SMALL_STREAMING | hermesvm01 / cpu | 0.0026 | 0.5301 | 0.0026 | 0.04962 |
 | moonshine TINY_STREAMING | hermesvm01 / cpu | 0.0025 | 0.2993 | 0.0025 | 0.02792 |
 | parakeet tdt-0.6b-v3-int8 | hermesvm01 / cpu | 0.0813 | 0.1774 | 0.0813 | 0.00904 |
+
+## Simultaneous TTS + STT (Stage-3 concurrency)
+
+Both services resident and pre-warmed; TTS on the dGPU. Same method as slug's
+Stage 3: idle baselines, one strictly-simultaneous pair, then 5-way floods in
+each direction. STT clip is 5.855 s of LibriSpeech speech.
+
+| Metric | Parakeet STT on CPU | Parakeet STT on dGPU (CUDA) |
+|---|---|---|
+| STT idle | 0.212 s | 0.221 s |
+| STT with TTS (1:1) | 0.201 s (-5.2 %) | 0.218 s (-1.3 %) |
+| TTS idle (total) | 0.054 s | 0.054 s |
+| TTS idle (TTFA) | 0.054 s | 0.054 s |
+| TTS with STT (1:1) | 0.073 s (+35.1 %) | 0.071 s (+30.6 %) |
+| TTS with STT (1:1) TTFA | 0.073 s (+35.1 %) | 0.070 s (+30.6 %) |
+| STT during TTS flood x5 | 0.245 s (+15.5 %) | 0.257 s (+16.3 %) |
+| TTS flood wall (per req) | 0.258 s | 0.235 s |
+| TTS during STT flood x5 | 0.075 s (+37.5 %) | 0.061 s (+13.1 %) |
+| TTS during STT flood x5 TTFA | 0.075 s (+37.5 %) | 0.061 s (+13.1 %) |
+| STT flood wall (per req) | 0.640 s | 0.617 s |
+
+STT barely notices TTS; TTS pays a small tax for STT. The TTS flood row is
+throughput, not latency: the service is single-worker with a generation lock,
+so concurrent TTS requests serialise. See the README's 'Simultaneous TTS + STT'
+section for the interpretation.
 
 ## Reference — slug (2026-08-06)
 

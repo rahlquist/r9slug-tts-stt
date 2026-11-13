@@ -5,6 +5,7 @@ Reads results/<machine>/<device>/summary.json + probe_*.json + hostinfo and
 writes benchmarks/benchmark-comparison-<date>.md.
 """
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -79,6 +80,41 @@ def hostinfo(m):
 
 def fmt(v, nd=2):
     return f"{v:.{nd}f}" if isinstance(v, (int, float)) else "—"
+
+
+STAGE3_FILES = [
+    ("Parakeet STT on CPU", "stage3-cpu-stt.log"),
+    ("Parakeet STT on dGPU (CUDA)", "stage3-cuda-stt.log"),
+]
+
+
+def parse_stage3(path):
+    """Parse a stage3_concurrency.py log -> {label: (mean_s, delta_pct|None)}."""
+    out = {}
+    p = Path(path)
+    if not p.exists():
+        return out
+    for line in p.read_text().splitlines():
+        if "mean=" not in line or "  " not in line:
+            continue
+        rest = line.split("  ", 1)[1].strip()
+        label = re.split(r"\s{2,}", rest)[0].strip()
+        m = re.search(r"mean=([\d.]+)s", rest)
+        if not m:
+            continue
+        d = re.search(r"([+-][\d.]+)%", rest)
+        out[label] = (float(m.group(1)), float(d.group(1)) if d else None)
+    return out
+
+
+def stage3_cell(v):
+    if v is None:
+        return "—"
+    mean, delta = v
+    s = f"{mean:.3f} s"
+    if delta is not None:
+        s += f" ({delta:+.1f} %)"
+    return s
 
 
 def main():
@@ -164,6 +200,49 @@ def main():
                   f"{fmt(p['audio_11s']['median_s'],4)} | {fmt(p['fixed_overhead_est_s'],4)} | "
                   f"{fmt(p['marginal_per_audio_s'],5)} |")
     a("")
+
+    # ---- stage 3 concurrency ----
+    stage3 = {name: parse_stage3(KIT.parent / fn) for name, fn in STAGE3_FILES}
+    stage3 = {k: v for k, v in stage3.items() if v}
+    if stage3:
+        a("## Simultaneous TTS + STT (Stage-3 concurrency)")
+        a("")
+        a("Both services resident and pre-warmed; TTS on the dGPU. Same method as slug's")
+        a("Stage 3: idle baselines, one strictly-simultaneous pair, then 5-way floods in")
+        a("each direction. STT clip is 5.855 s of LibriSpeech speech.")
+        a("")
+        cols = list(stage3.keys())
+        a("| Metric | " + " | ".join(cols) + " |")
+        a("|" + "---|" * (len(cols) + 1))
+        rows = [
+            ("STT idle", ["STT idle"]),
+            ("STT with TTS (1:1)", ["STT concurrent"]),
+            ("TTS idle (total)", ["TTS idle total (stream)"]),
+            ("TTS idle (TTFA)", ["TTS idle TTFA"]),
+            ("TTS with STT (1:1)", ["TTS concurrent total"]),
+            ("TTS with STT (1:1) TTFA", ["TTS concurrent TTFA"]),
+            ("STT during TTS flood x5", ["STT during TTS flood x5"]),
+            ("TTS flood wall (per req)", ["TTS flood wall (per req)"]),
+            ("TTS during STT flood x5", ["TTS during STT flood x5 total"]),
+            ("TTS during STT flood x5 TTFA", ["TTS during STT flood x5 TTFA"]),
+            ("STT flood wall (per req)", ["STT flood wall (per req)"]),
+        ]
+        for label, keys in rows:
+            row = [label]
+            for c in cols:
+                v = None
+                for k in keys:
+                    if k in stage3[c]:
+                        v = stage3[c][k]
+                        break
+                row.append(stage3_cell(v))
+            a("| " + " | ".join(row) + " |")
+        a("")
+        a("STT barely notices TTS; TTS pays a small tax for STT. The TTS flood row is")
+        a("throughput, not latency: the service is single-worker with a generation lock,")
+        a("so concurrent TTS requests serialise. See the README's 'Simultaneous TTS + STT'")
+        a("section for the interpretation.")
+        a("")
 
     # ---- reference ----
     a("## Reference — slug (2026-08-06)")
