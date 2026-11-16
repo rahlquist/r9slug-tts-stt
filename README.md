@@ -223,6 +223,11 @@ curl -X POST http://r9slug.home.lan:8094/v1/audio/transcriptions \
    Run the CPU matrix only when the host is idle.
 7. **WER differences of ±0.3 pp between hosts are noise** on a 73-clip corpus; the model
    and corpus are identical everywhere.
+8. **Always pass the real sample rate to `recognize()`.** onnx-asr does not resample on
+   its own — it only labels the input. The service must forward `sample_rate=int(sr)` from
+   the decoded audio; a hardcoded 16 kHz silently truncates 44.1/48 kHz input (what most
+   voice clients send) to empty text. Verified: 8/16/44.1/48 kHz and Ogg/Opus all
+   transcribe after the fix, all empty before it.
 
 ## Repository layout
 

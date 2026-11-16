@@ -12,6 +12,7 @@ import numpy as np
 import soundfile as sf
 import onnx_asr
 from fastapi import FastAPI, File, Form, UploadFile
+from fastapi.responses import PlainTextResponse
 
 MODEL = os.environ.get("ASR_MODEL", "nemo-parakeet-tdt-0.6b-v3")
 MODEL_PATH = os.environ.get("ASR_MODEL_PATH", "/models/parakeet")
@@ -54,13 +55,20 @@ def health():
 
 
 @app.post("/v1/audio/transcriptions")
-async def transcribe(file: UploadFile = File(...), model: str = Form("whisper-1")):
+async def transcribe(file: UploadFile = File(...), model: str = Form("whisper-1"),
+                     response_format: str = Form("json")):
     data = await file.read()
     audio, sr = sf.read(io.BytesIO(data), dtype="float32")
     if audio.ndim > 1:
         audio = audio.mean(axis=1)
     t0 = time.perf_counter()
-    text = _state["model"].recognize(audio, sample_rate=16000)
+    # Pass the ACTUAL sample rate: onnx-asr does not resample on its own, so a
+    # hardcoded 16 kHz silently truncates 44.1/48 kHz input to empty text.
+    text = _state["model"].recognize(audio, sample_rate=int(sr))
     dt = time.perf_counter() - t0
     _state["requests"] += 1
+    # OpenAI shape: `text` gets a bare body, everything else gets JSON. Hermes sends
+    # response_format=text when the model is named whisper-1, so this is load-bearing.
+    if response_format.strip().lower() in ("text", "txt", "plain"):
+        return PlainTextResponse(text)
     return {"text": text, "elapsed_ms": round(dt * 1000, 1)}
